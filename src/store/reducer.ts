@@ -6,7 +6,8 @@ import {
   DELETE_TODO,
   TOGGLE_ALL_TODOS,
   UPDATE_TODO_STATUS,
-  SET_TODO
+  SET_TODO,
+  UPDATE_TODO_NAME
 } from './actions';
 
 import Service from '../service';
@@ -36,7 +37,13 @@ function reducer(state: AppState, action: AppActions): AppState {
       return {
         ...state
       };
-
+    case UPDATE_TODO_NAME: 
+      const index = state.todos.findIndex((todo) => todo.id === action.payload.todoId);
+      state.todos[index].content = action.payload.name;
+      updateLocalStorage(state.todos);
+      return {
+        ...state
+      }
     case UPDATE_TODO_STATUS:
       const index2 = state.todos.findIndex((todo) => todo.id === action.payload.todoId);
       state.todos[index2].status = action.payload.checked ? TodoStatus.COMPLETED : TodoStatus.ACTIVE;

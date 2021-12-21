@@ -7,7 +7,8 @@ import {
     deleteTodo,
     toggleAllTodos,
     deleteAllTodos,
-    updateTodoStatus
+    updateTodoStatus,
+    updateTodoName
 } from './store/actions';
 import Service from './service';
 import {TodoStatus} from './models/todo';
@@ -16,10 +17,13 @@ import {isTodoCompleted} from './utils';
 type EnhanceTodoStatus = TodoStatus | 'ALL';
 
 
+
 const ToDoPage = () => {
     const [{todos}, dispatch] = useReducer(reducer, initialState);
     const [showing, setShowing] = useState<EnhanceTodoStatus>('ALL');
+    const [edit, setEdit] = useState<Number | null>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const [editText, setEditText] = useState<any>("");
 
     useEffect(()=>{
         (async ()=>{
@@ -59,6 +63,28 @@ const ToDoPage = () => {
         }
     });
 
+    const onChangeTaskname = (e: React.KeyboardEvent<HTMLInputElement>, todoId: string) => {
+        if (e.key === 'Enter') {
+            dispatch(updateTodoName(todoId, editText));
+            setEditText("");
+            setEdit(null);
+        }
+    }
+
+    const setEditMode = (index: Number, content: string) => {
+        setEdit(index);
+        setEditText(content);
+    }
+
+    const changeEditText = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setEditText(e.target.value);
+    }
+
+    const blurEditText = () => {
+        setEdit(null);
+        setEditText("");
+    }
+
     const activeTodos = todos.reduce(function (accum, todo) {
         return isTodoCompleted(todo) ? accum : accum + 1;
     }, 0);
@@ -83,7 +109,12 @@ const ToDoPage = () => {
                                     checked={isTodoCompleted(todo)}
                                     onChange={(e) => onUpdateTodoStatus(e, todo.id)}
                                 />
-                                <span>{todo.content}</span>
+                                {edit !== null && edit === index ? 
+                                    <input autoFocus={true} type="text" className="Todo__Edit" value={editText} onChange={changeEditText} onBlur={blurEditText} onKeyDown={(e) => onChangeTaskname(e, todo.id)}/>
+                                    
+                                    : 
+                                    <span onDoubleClick={() => setEditMode(index, todo.content)}>{todo.content}</span>
+                                }
                                 <button
                                     className="Todo__delete"
                                     onClick={() => dispatch(deleteTodo(todo.id))}
