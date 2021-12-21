@@ -17,6 +17,10 @@ class ApiFullstack extends IAPI {
 
         return resp.data.data;
     }
+
+    async setTodos(): Promise<void> {
+        
+    }
 }
 
 
