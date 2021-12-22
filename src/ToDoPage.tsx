@@ -91,6 +91,9 @@ const ToDoPage = () => {
 
     return (
         <div className="ToDo__container">
+            <div>
+                <h5>TO DO LIST</h5>
+            </div>
             <div className="Todo__creation">
                 <input
                     ref={inputRef}
@@ -110,7 +113,15 @@ const ToDoPage = () => {
                                     onChange={(e) => onUpdateTodoStatus(e, todo.id)}
                                 />
                                 {edit !== null && edit === index ? 
-                                    <input autoFocus={true} type="text" className="Todo__Edit" value={editText} onChange={changeEditText} onBlur={blurEditText} onKeyDown={(e) => onChangeTaskname(e, todo.id)}/>
+                                    <input 
+                                        autoFocus={true} 
+                                        type="text" 
+                                        className="Todo__Edit" 
+                                        value={editText} 
+                                        onChange={changeEditText} 
+                                        onBlur={blurEditText} 
+                                        onKeyDown={(e) => onChangeTaskname(e, todo.id)}
+                                    />
                                     
                                     : 
                                     <span onDoubleClick={() => setEditMode(index, todo.content)}>{todo.content}</span>
@@ -135,13 +146,13 @@ const ToDoPage = () => {
                     /> : <div/>
                 }
                 <div className="Todo__tabs">
-                    <button className="Action__btn" onClick={()=>setShowing('ALL')}>
+                    <button className={`Action__btn ${showing === 'ALL' ? 'Btn__active': ''}`} onClick={()=>setShowing('ALL')}>
                         All
                     </button>
-                    <button className="Action__btn" onClick={()=>setShowing(TodoStatus.ACTIVE)}>
+                    <button className={`Action__btn ${showing === TodoStatus.ACTIVE ? 'Btn__active': ''}`} onClick={()=>setShowing(TodoStatus.ACTIVE)}>
                         Active
                     </button>
-                    <button className="Action__btn" onClick={()=>setShowing(TodoStatus.COMPLETED)}>
+                    <button className={`Action__btn ${showing === TodoStatus.COMPLETED ? 'Btn__active': ''}`}onClick={()=>setShowing(TodoStatus.COMPLETED)}>
                         Completed
                     </button>
                 </div>
